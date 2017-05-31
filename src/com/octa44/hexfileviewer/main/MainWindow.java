@@ -3,8 +3,12 @@ package com.octa44.hexfileviewer.main;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 
 import javax.swing.AbstractListModel;
+import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -12,10 +16,15 @@ import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
+
+import com.octa44.hexfileviewer.data.HexLine;
+
+import javax.swing.JScrollPane;
 
 public class MainWindow extends JFrame{
 
@@ -24,6 +33,8 @@ public class MainWindow extends JFrame{
 	 */
 	private static final long serialVersionUID = -2706452145878275225L;
 	private JTextField tfFileName;
+	
+	private JList lstLines;
 
 	public MainWindow(){
 		setSize(1024, 768);
@@ -32,18 +43,6 @@ public class MainWindow extends JFrame{
 		JPanel panel = new JPanel();
 		getContentPane().add(panel, BorderLayout.CENTER);
 		panel.setLayout(new BorderLayout(0, 0));
-		
-		JList lstLines = new JList();
-		lstLines.setModel(new AbstractListModel() {
-			String[] values = new String[] {"aaaa", "bbbb", "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ"};
-			public int getSize() {
-				return values.length;
-			}
-			public Object getElementAt(int index) {
-				return values[index];
-			}
-		});
-		panel.add(lstLines, BorderLayout.WEST);
 		
 		JList lstHexView = new JList();
 		panel.add(lstHexView, BorderLayout.CENTER);
@@ -61,11 +60,29 @@ public class MainWindow extends JFrame{
 		
 		
 		
+		lstLines = new JList();
+		lstLines.setModel(new DefaultListModel<HexLine>());
+		lstLines.setCellRenderer(new HexLineRenderer());
+		
+		JScrollPane scrollPane = new JScrollPane(lstLines);
+		panel.add(scrollPane, BorderLayout.WEST);
+		
+		
 		JMenuBar jmb = new JMenuBar();
 		JMenu jmFile = new JMenu("File");
 		JMenuItem jmiFile = new JMenuItem("Open File");
 		jmiFile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				
+				if(1==1){
+					try {
+						loadFile("C:\\temp\\4\\Explorer16PIC32MX_1.X.production.hex");
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}else{
+				
 				JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
 				jfc.setDialogTitle("Select a HEX file");
 				jfc.setAcceptAllFileFilterUsed(false);
@@ -74,8 +91,17 @@ public class MainWindow extends JFrame{
 				
 				int returnValue = jfc.showOpenDialog(null);
 				if (returnValue == JFileChooser.APPROVE_OPTION) {
-					System.out.println("Opening: "+jfc.getSelectedFile().getPath());
+					String strFileName = jfc.getSelectedFile().getPath();
+					System.out.println("Opening: "+strFileName);
+					try {
+						loadFile(strFileName);
+					} catch (Exception e) {
+						JOptionPane.showMessageDialog(MainWindow.this, "Error Loading File: "+strFileName+"\r\n"+e.getMessage());
+						e.printStackTrace();
+					}
 					
+					
+				}
 				}
 			}
 		});
@@ -86,4 +112,19 @@ public class MainWindow extends JFrame{
 		this.setJMenuBar(jmb);
 		
 	}
+	
+	
+	private void loadFile(String strFilePath) throws Exception{
+
+		FileReader fileReader = new FileReader(strFilePath);
+		BufferedReader bufferedReader = new BufferedReader(fileReader);
+
+		String line;
+		while ((line = bufferedReader.readLine()) != null) {
+			((DefaultListModel<HexLine>)lstLines.getModel()).addElement(new HexLine(line.substring(1))); //Skip the column in the beginning
+		}
+		fileReader.close();
+		lstLines.repaint();
+	}
+	
 }
