@@ -15,11 +15,11 @@ public class HexLine {
 	//CC - Checksum
 	
 	public HexLine(String dataLine){
-		dataBytes = dataLine.substring(0,2);
-		dataAddress = dataLine.substring(2,6);
-		recordType = dataLine.substring(6,8);
-		data = dataLine.substring(8, dataLine.length()-2);
-		checksum = dataLine.substring(dataLine.length()-2);
+		dataBytes = dataLine.substring(0,2).toUpperCase();
+		dataAddress = dataLine.substring(2,6).toUpperCase();
+		recordType = dataLine.substring(6,8).toUpperCase();
+		data = dataLine.substring(8, dataLine.length()-2).toUpperCase();
+		checksum = dataLine.substring(dataLine.length()-2).toUpperCase();
 	}
 
 

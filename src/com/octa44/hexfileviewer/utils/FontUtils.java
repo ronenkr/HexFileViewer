@@ -8,7 +8,7 @@ public class FontUtils {
 	
 	public static Font getMonospacedFont(){
 		if(fMonospaced == null){
-			fMonospaced =new Font("Courier New",Font.BOLD,12); 
+			fMonospaced =new Font("Courier New",Font.BOLD,14); 
 		}
 		return fMonospaced;
 	}

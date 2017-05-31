@@ -1,6 +1,7 @@
 package com.octa44.hexfileviewer.main;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -65,6 +66,7 @@ public class MainWindow extends JFrame{
 		lstLines.setCellRenderer(new HexLineRenderer());
 		
 		JScrollPane scrollPane = new JScrollPane(lstLines);
+		scrollPane.setPreferredSize(new Dimension(380, 100));
 		panel.add(scrollPane, BorderLayout.WEST);
 		
 		
