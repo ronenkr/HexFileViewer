@@ -19,6 +19,8 @@ public class HexLineRenderer extends JPanel implements ListCellRenderer<HexLine>
 	private JLabel recordType;
 	private JLabel data;
 	private JLabel checksum;
+	
+	private Color backColor = Color.WHITE;
 	/**
 	 * 
 	 */
@@ -61,13 +63,13 @@ public class HexLineRenderer extends JPanel implements ListCellRenderer<HexLine>
 		this.add(data);
 		
 		checksum = new JLabel("CC");
-		checksum.setForeground(Color.ORANGE);
+		checksum.setForeground(Color.orange.darker());
 		checksum.setFont(FontUtils.getMonospacedFont());
 		checksum.setBounds(338, 0, 16, 16);
 
 		this.add(checksum);
 		
-		this.setBackground(Color.WHITE);
+		this.setBackground(backColor);
 		
 	}
 	
@@ -79,10 +81,33 @@ public class HexLineRenderer extends JPanel implements ListCellRenderer<HexLine>
 		recordType.setText(dataLine.getRecordType());
 		data.setText(dataLine.getData());
 		checksum.setText(dataLine.getChecksum());
+		
+		switch(dataLine.getRecordType()){
+		case "00":{
+			backColor = Color.white;
+			break;
+		}
+		
+		case "01":{
+			backColor = Color.RED.brighter();
+			break;
+		}
+		
+		case "02":{
+			backColor = Color.green.brighter().brighter();
+			break;
+		}
+		
+		case "04":{
+			backColor = Color.PINK.brighter();
+			break;
+		}
+		}
+		
 		if(isSelected){
 			setBackground(Color.LIGHT_GRAY);
 		}else{
-			setBackground(Color.WHITE);
+			setBackground(backColor);
 		}
 		
 		return this;
