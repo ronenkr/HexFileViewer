@@ -122,7 +122,7 @@ public class MainWindow extends JFrame{
 		jmiFile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
-				if(1==1){
+				if(1==0){
 					try {
 						loadFile("C:\\temp\\4\\Explorer16PIC32MX_1.X.production.hex");
 					} catch (Exception e) {
